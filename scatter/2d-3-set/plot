@@ -1,0 +1,43 @@
+set term pdfcairo font "Helvetica-bold, 15"
+set output "./video-scatter.eps"
+set datafile separator ","
+set size ratio 0.88
+set grid xtics ytics
+set multiplot
+
+set style line 1 lc rgb '#6C7A89' lt 1 lw 4
+set style line 2 lc rgb '#95A5A6' lt 1 lw 4
+set style line 3 lc rgb '#BDC3C7' lt 1 lw 4
+set style line 4 lc rgb '#D2D7D3' lt 1 lw 4
+
+set style data points
+set style fill transparent solid 0.36 noborder
+set style circle radius 6
+
+
+set xlabel "Throughput (Mbps)"
+set xrange [0 : 500]
+set xtics 0,100,500
+set xtics border in scale 0.5 mirror offset character 0, 0, 0 
+
+set yrange [0 : 30] noreverse nowriteback
+set ylabel "Power consumption (W)" offset 0.0,0
+set format y '%.0s'
+set ytics border in scale 0.5 mirror offset character 0, 0, 0 
+
+set key maxrows 2 left bottom font "Helvetica-bold, 12"
+
+#set label "x10^{6}" at -0.5,8400000
+#set xtics ("1000" 0, "3000" 1, "5000" 2, "7000" 3, "9000" 4, "12000" 5)
+
+f(x) = a*x + b
+g(x) = a1*x + b1
+k(x) = a2*x + b2
+fit f(x) "data.csv" u 1:2 via a, b
+fit g(x) "data.csv" u 3:4 via a1, b1
+fit k(x) "data.csv" u 5:6 via a2, b2
+
+plot "data.csv" u 3:4 w circles fs transparent solid 0.2 lc rgb "#F1A9A0" title "H/W-NAT",\
+     "" u 1:2 w circles fs transparent solid 0.5 lc rgb "#674172" title "In-kernel", \
+     "" u 5:6 w circles fs transparent solid 0.5 lc rgb "#1E8BC3" fs border lc rgb "#34495e" title "OvS-DPDK"
+     #f(x) title "", g(x) title "", k(x) title ""

@@ -1,0 +1,35 @@
+set term post enh eps color "Helvetica" 25
+set output "./static-social-welfare-couple.eps"
+set datafile separator ","
+set style fill pattern 2
+set bar 5
+set grid ytics
+set multiplot
+
+set style line 1 lc rgb '#3498db' lt 1 lw 4 # blue
+set style line 2 lc rgb '#e74c3c' lt 1 lw 4 # red
+set style line 3 lc rgb '#1abc9c' lt 1 lw 4 # green
+set style line 4 lc rgb '#f39c12' lt 1 lw 4 # orange
+
+set auto x
+set yrange [0 : 12] noreverse nowriteback
+set xrange [-0.5 : 8]
+set xtics border in scale 1,0.5 nomirror rotate by -45 offset character 0, 0, 0 
+set ylabel "Social Welfare" font "Helvetica,25" offset 1,0
+set xlabel "Number of Bids" font "Helvetica,25"
+set xtics ("1000" 0, "2000" 1, "3000" 2, "4000" 3, "5000" 4, "6000" 5, "7000" 6, "8000" 7)
+set boxwidth 0.15
+set size ratio 0.618
+
+set label "x10^{3}" at -0.4,12.6
+set format y2 "%.1s"
+
+set key maxrows 1 font ",20"
+
+plot "data.csv" u 0:1 w boxes title "FCFS" ls 3 fillstyle pattern 4,\
+     "" u ($0+0.2):2 w boxes title "SIM" ls 1 fillstyle pattern 2,\
+     "" u ($0+0.4):3 w boxes title "OA" ls 2 fillstyle pattern 3
+
+
+
+

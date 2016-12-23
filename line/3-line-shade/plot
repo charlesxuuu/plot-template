@@ -1,0 +1,54 @@
+set term post enh eps color "Helvetica" 25
+set output "./dynamic-trace-demand-supply.eps"
+set datafile separator ","
+set style fill pattern 2
+set bar 5
+set grid ytics
+set multiplot
+
+# CPU
+set style line 1 lc rgb '#3498db' lt 1 lw 6 pt 2 pi -1 ps 1.5 dashtype 3
+set style line 2 lc rgb '#1abc9c' lt 2 lw 6 pt 4 pi -1 ps 1.5 dashtype 2
+set style line 3 lc rgb '#e74c3c' lt 3 lw 6 pt 3 pi -1 ps 1.5 dashtype 1
+
+#set style line 4 lc rgb '#e74c3c' lt 1 lw 5 pt 5 pi -1 ps 2 
+
+#set style line 1 lc rgb '#3498db' lt 1 lw 5 pt 1 pi -1 ps 2 # blue
+#set style line 2 lc rgb '#e74c3c' lt 2 lw 5 pt 2 pi -1 ps 2 # red
+#set style line 3 lc rgb '#1abc9c' lt 3 lw 5 pt 3 pi -1 ps 2 # green
+#set style line 4 lc rgb '#f39c12' lt 4 lw 5 pt 4 pi -1 ps 2 # orange
+
+set auto x
+set yrange [0 : 40] noreverse nowriteback
+set xrange [0 : 73]
+set xtics border in scale 1,0.5 nomirror rotate by -45 offset character 0, 0, 0 
+set ylabel "Units" font "Helvetica,25" offset 1,0
+set xlabel "Time (minutes)" font "Helvetica,25"
+
+# Color
+max_color=1
+red(val) = (val < 0 ? abs(1+val/max_color) : 1)
+green(val) = (1 - abs(val)/max_color)
+blue(val) = red(-val)
+rgb(val) = 65536*int(255*red(val)) + 256*int(255*green(val)) + int(255*blue(val))
+# Color
+
+set xtics("0" 0, "50" 10, "100" 20, "150" 30, "200" 40, "250" 50, "300" 60, "350" 70)
+set ytics 0,10,40
+
+set size ratio 0.467
+
+set key maxrows 3 font ",22" 
+
+set style fill pattern 4 noborder
+
+plot "data.csv" u 0:3 title "" with filledcurves lc rgb "white",\
+     "" u 0:2 with filledcurves x1 lc "#2ecc71" title "",\
+     "" u 0:3 with filledcurves x1 title "" lc rgb "white",\
+     "" u 0:1 with lines title "Instant-demand" ls 1,\
+     "" u 0:2 with lines title "Cumulative-demand" ls 2,\
+     "" u 0:3 with lines title "Supply" ls 3
+    
+
+
+
